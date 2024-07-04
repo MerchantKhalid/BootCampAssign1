@@ -55,7 +55,29 @@ const getAllOrders = async (req: Request, res: Response) => {
     });
   }
 };
+
+// email
+const getOrdersEmail = async (req: Request, res: Response) => {
+  try {
+    const { email } = req.query; // Extract email from query parameters
+    const result = await orderService.getOrdersEmail(email as string);
+
+    res.status(200).json({
+      success: true,
+      message: 'Orders fetched successfully',
+      data: result,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Orders couldn't be fetched",
+      error: error instanceof Error ? error.message : 'Unknown error occurred',
+    });
+  }
+};
+
 export const OrderControllers = {
   createOrder,
   getAllOrders,
+  getOrdersEmail,
 };
