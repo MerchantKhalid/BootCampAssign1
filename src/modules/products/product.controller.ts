@@ -49,8 +49,32 @@ const getProductById = async (req: Request, res: Response) => {
   }
 };
 
+// update product
+const updateProductById = async (req: Request, res: Response) => {
+  try {
+    const { productId } = req.params;
+    const updateData = req.body;
+    const result = await Productservice.updateProductById(
+      productId,
+      updateData
+    );
+    res.status(200).json({
+      success: true,
+      message: 'Product updated successfully',
+      data: result,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Product couldn't be updated",
+      error: error,
+    });
+  }
+};
+
 export const ProductControllers = {
   createProduct,
   getAllProducts,
   getProductById,
+  updateProductById,
 };
