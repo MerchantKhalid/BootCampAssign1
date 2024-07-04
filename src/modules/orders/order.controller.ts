@@ -59,7 +59,7 @@ const getAllOrders = async (req: Request, res: Response) => {
 // email
 const getOrdersEmail = async (req: Request, res: Response) => {
   try {
-    const { email } = req.query; // Extract email from query parameters
+    const { email } = req.query;
     const result = await orderService.getOrdersEmail(email as string);
 
     res.status(200).json({
