@@ -23,6 +23,21 @@ const updateProductById = async (productId: string, updateData: TProduct) => {
   return result;
 };
 
+// search a product
+const searchProducts = async (searchTerm: string) => {
+  const query = {
+    $or: [
+      { name: { $regex: searchTerm, $options: 'i' } },
+      { description: { $regex: searchTerm, $options: 'i' } },
+      { category: { $regex: searchTerm, $options: 'i' } },
+      { tags: { $in: [searchTerm] } },
+    ],
+  };
+
+  const result = await Product.find(query);
+  return result;
+};
+
 // delete a product
 const deleteProductById = async (productId: string) => {
   const result = await Product.findByIdAndDelete(productId);
@@ -35,4 +50,5 @@ export const Productservice = {
   getProductById,
   updateProductById,
   deleteProductById,
+  searchProducts,
 };

@@ -90,10 +90,37 @@ const deleteProductById = async (req: Request, res: Response) => {
     });
   }
 };
+
+// serach a product
+const searchProducts = async (req: Request, res: Response) => {
+  try {
+    const { searchTerm } = req.query;
+    if (!searchTerm) {
+      return res.status(400).json({
+        success: false,
+        message: 'Missing searchTerm parameter',
+      });
+    }
+
+    const result = await Productservice.searchProducts(searchTerm.toString());
+    res.status(200).json({
+      success: true,
+      message: 'Products fetched successfully',
+      data: result,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Products couldn't be fetched",
+      error: error,
+    });
+  }
+};
 export const ProductControllers = {
   createProduct,
   getAllProducts,
   getProductById,
   updateProductById,
   deleteProductById,
+  searchProducts,
 };
