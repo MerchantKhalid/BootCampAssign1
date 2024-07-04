@@ -103,16 +103,23 @@ const searchProducts = async (req: Request, res: Response) => {
     }
 
     const result = await Productservice.searchProducts(searchTerm.toString());
+    if (result.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: `No products found matching name '${searchTerm}'`,
+      });
+    }
+
     res.status(200).json({
       success: true,
-      message: 'Products fetched successfully',
+      message: `Products matching name '${searchTerm}' fetched successfully`,
       data: result,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: "Products couldn't be fetched",
-      error: error,
+      message: `Products couldn't be fetched`,
+      error: error instanceof Error ? error.message : 'Unknown error occurred',
     });
   }
 };

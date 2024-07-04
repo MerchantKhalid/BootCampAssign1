@@ -26,15 +26,16 @@ const updateProductById = async (productId: string, updateData: TProduct) => {
 // search a product
 const searchProducts = async (searchTerm: string) => {
   const query = {
-    $or: [
-      { name: { $regex: searchTerm, $options: 'i' } },
-      { description: { $regex: searchTerm, $options: 'i' } },
-      { category: { $regex: searchTerm, $options: 'i' } },
-      { tags: { $in: [searchTerm] } },
-    ],
+    name: { $regex: searchTerm, $options: 'i' },
   };
 
   const result = await Product.find(query);
+
+  // Check if no products were found
+  if (result.length === 0) {
+    throw new Error(`No products found matching name '${searchTerm}'`);
+  }
+
   return result;
 };
 
