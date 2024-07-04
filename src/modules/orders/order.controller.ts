@@ -1,16 +1,57 @@
 import { Request, Response } from 'express';
 
 import orderService from './order.service';
+import { OrderSchema } from './validationSchemas';
+
+// const createOrder = async (req: Request, res: Response) => {
+//   try {
+//     const { email, productId, price, quantity } = req.body;
+
+//     // Validate request body
+//     if (!email || !productId || !price || !quantity) {
+//       return res.status(400).json({
+//         success: false,
+//         message: 'Missing required fields',
+//       });
+//     }
+
+//     // Create new order
+//     const newOrder = {
+//       email,
+//       productId,
+//       price,
+//       quantity,
+//     };
+
+//     const createdOrder = await orderService.createOrder(newOrder);
+
+//     res.status(201).json({
+//       success: true,
+//       message: 'Order created successfully!',
+//       data: createdOrder,
+//     });
+//   } catch (error) {
+//     res.status(500).json({
+//       success: false,
+//       message: 'Failed to create order',
+//       error: error instanceof Error ? error.message : 'Unknown error occurred',
+//     });
+//   }
+// };
 
 const createOrder = async (req: Request, res: Response) => {
   try {
     const { email, productId, price, quantity } = req.body;
 
-    // Validate request body
-    if (!email || !productId || !price || !quantity) {
+    // Validate request body using Zod
+    try {
+      OrderSchema.parse({ email, productId, price, quantity });
+    } catch (error) {
       return res.status(400).json({
         success: false,
-        message: 'Missing required fields',
+        message: 'Validation error',
+        error:
+          error instanceof Error ? error.message : 'Unknown error occurred',
       });
     }
 
@@ -60,6 +101,7 @@ const getAllOrders = async (req: Request, res: Response) => {
 const getOrdersEmail = async (req: Request, res: Response) => {
   try {
     const { email } = req.query;
+
     const result = await orderService.getOrdersEmail(email as string);
 
     res.status(200).json({
