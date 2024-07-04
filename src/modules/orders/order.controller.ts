@@ -1,6 +1,5 @@
-// order.controller.ts
 import { Request, Response } from 'express';
-import { Order } from './order.interface';
+
 import orderService from './order.service';
 
 const createOrder = async (req: Request, res: Response) => {
@@ -16,7 +15,7 @@ const createOrder = async (req: Request, res: Response) => {
     }
 
     // Create new order
-    const newOrder: Order = {
+    const newOrder = {
       email,
       productId,
       price,
@@ -39,6 +38,24 @@ const createOrder = async (req: Request, res: Response) => {
   }
 };
 
-export default {
+// get all orders
+const getAllOrders = async (req: Request, res: Response) => {
+  try {
+    const result = await orderService.getAllOrders();
+    res.status(200).json({
+      success: true,
+      message: 'Order fetched successfully',
+      data: result,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Order couldn't fetched ",
+      error: error,
+    });
+  }
+};
+export const OrderControllers = {
   createOrder,
+  getAllOrders,
 };
